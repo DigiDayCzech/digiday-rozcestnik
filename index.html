@@ -21,14 +21,11 @@
   h1 { margin:0 0 4px; font-size:18pt; }
   h1 span { color:var(--pink); }
   p.sub { margin:0 0 24px; color:var(--muted); font-size:10.5pt; }
-  h2 {
-    margin:26px 0 10px; font-size:9.5pt; font-weight:700;
-    text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
-  }
-  h2:first-of-type { margin-top:0; }
+  section { display:none; }
+  section.active { display:block; }
   a.tool {
     display:flex; align-items:center; justify-content:space-between; gap:14px;
-    text-decoration:none; color:var(--dark);
+    text-decoration:none; color:var(--dark); cursor:pointer;
     border:1px solid var(--border); border-radius:8px;
     padding:16px 18px; margin-bottom:10px; transition:all .15s;
   }
@@ -36,6 +33,15 @@
   a.tool .t { font-weight:700; font-size:11pt; }
   a.tool .d { font-size:9.5pt; color:var(--muted); margin-top:2px; }
   a.tool .arrow { color:var(--pink); font-size:16pt; font-weight:700; }
+  a.tool.branch { padding:22px 18px; }
+  a.tool.branch .t { font-size:12.5pt; }
+  a.back {
+    display:inline-block; text-decoration:none; color:var(--muted);
+    font-size:9.5pt; font-weight:700; margin-bottom:14px;
+  }
+  a.back:hover { color:var(--pink); }
+  h2 { margin:0 0 14px; font-size:13pt; }
+  h2 span { color:var(--pink); }
   footer { margin-top:22px; font-size:8.5pt; color:var(--muted); text-align:center; }
   footer a { color:var(--pink); text-decoration:none; }
 </style>
@@ -46,51 +52,87 @@
     <h1>Rozcestník <span>nástrojů</span></h1>
     <p class="sub">Interní nástroje DigiDay Czech s.r.o.</p>
 
-    <h2>Nástroje QARO</h2>
+    <section id="home">
+      <a class="tool branch" href="#qaro">
+        <span>
+          <span class="t">Nástroje QARO</span>
+          <div class="d">Importer a generátor widgetů pro systém QARO</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
 
-    <a class="tool" href="https://qaro-importer.vercel.app" target="_blank" rel="noopener">
-      <span>
-        <span class="t">QARO importer</span>
-        <div class="d">Import obsahu ze starých CMS do systému QARO</div>
-      </span>
-      <span class="arrow">→</span>
-    </a>
+      <a class="tool branch" href="#generatory">
+        <span>
+          <span class="t">Generátory PDF</span>
+          <div class="d">Předávací protokoly a protokol o profylaxi</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </section>
 
-    <a class="tool" href="https://dominikdigiday.github.io/qaro-widget/" target="_blank" rel="noopener">
-      <span>
-        <span class="t">Generátor widgetů</span>
-        <div class="d">Odkazové dlaždice a widgety pro weby QARO</div>
-      </span>
-      <span class="arrow">→</span>
-    </a>
+    <section id="qaro">
+      <a class="back" href="#">← Zpět na rozcestník</a>
+      <h2>Nástroje <span>QARO</span></h2>
 
-    <h2>Generátory PDF</h2>
+      <a class="tool" href="https://qaro-importer.vercel.app" target="_blank" rel="noopener">
+        <span>
+          <span class="t">QARO importer</span>
+          <div class="d">Import obsahu ze starých CMS do systému QARO</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
 
-    <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol.html" target="_blank" rel="noopener">
-      <span>
-        <span class="t">Předávací protokol QARO</span>
-        <div class="d">Předání webového systému samosprávám a obcím</div>
-      </span>
-      <span class="arrow">→</span>
-    </a>
+      <a class="tool" href="https://dominikdigiday.github.io/qaro-widget/" target="_blank" rel="noopener">
+        <span>
+          <span class="t">Generátor widgetů</span>
+          <div class="d">Odkazové dlaždice a widgety pro weby QARO</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </section>
 
-    <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol-b2b.html" target="_blank" rel="noopener">
-      <span>
-        <span class="t">Předávací protokol B2B</span>
-        <div class="d">Předání projektu firemnímu zákazníkovi (IČO, DIČ, smlouva o dílo)</div>
-      </span>
-      <span class="arrow">→</span>
-    </a>
+    <section id="generatory">
+      <a class="back" href="#">← Zpět na rozcestník</a>
+      <h2>Generátory <span>PDF</span></h2>
 
-    <a class="tool" href="https://digidayczech.github.io/digiday-pdf/generator.html" target="_blank" rel="noopener">
-      <span>
-        <span class="t">Protokol o profylaxi webu</span>
-        <div class="d">Pravidelná údržba a kontrola webu</div>
-      </span>
-      <span class="arrow">→</span>
-    </a>
+      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol.html" target="_blank" rel="noopener">
+        <span>
+          <span class="t">Předávací protokol QARO</span>
+          <div class="d">Předání webového systému samosprávám a obcím</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol-b2b.html" target="_blank" rel="noopener">
+        <span>
+          <span class="t">Předávací protokol B2B</span>
+          <div class="d">Předání projektu firemnímu zákazníkovi (IČO, DIČ, smlouva o dílo)</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/generator.html" target="_blank" rel="noopener">
+        <span>
+          <span class="t">Protokol o profylaxi webu</span>
+          <div class="d">Pravidelná údržba a kontrola webu</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </section>
 
     <footer>DigiDay Czech s.r.o. &nbsp;·&nbsp; IČO 06078362 &nbsp;·&nbsp; <a href="https://digiday.cz">digiday.cz</a></footer>
   </div>
+
+<script>
+  function route() {
+    var id = location.hash.replace('#', '');
+    if (id !== 'qaro' && id !== 'generatory') id = 'home';
+    document.querySelectorAll('section').forEach(function (s) {
+      s.classList.toggle('active', s.id === id);
+    });
+  }
+  window.addEventListener('hashchange', route);
+  route();
+</script>
 </body>
 </html>
