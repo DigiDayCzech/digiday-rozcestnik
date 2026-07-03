@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DigiDay – Rozcestník nástrojů</title>
+<style>
+  :root { --pink:#e0007a; --dark:#313746; --bg:#f4f4f7; --border:#e5e7eb; --muted:#6b7280; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    color:var(--dark); background:var(--bg); padding:24px;
+  }
+  .card {
+    background:#fff; border:1px solid var(--border); border-top:4px solid var(--pink);
+    border-radius:10px; padding:32px; max-width:560px; width:100%;
+    box-shadow:0 8px 30px rgba(0,0,0,.06);
+  }
+  .card img { height:38px; margin-bottom:18px; }
+  h1 { margin:0 0 4px; font-size:18pt; }
+  h1 span { color:var(--pink); }
+  p.sub { margin:0 0 24px; color:var(--muted); font-size:10.5pt; }
+  h2 {
+    margin:26px 0 10px; font-size:9.5pt; font-weight:700;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+  }
+  h2:first-of-type { margin-top:0; }
+  a.tool {
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    text-decoration:none; color:var(--dark);
+    border:1px solid var(--border); border-radius:8px;
+    padding:16px 18px; margin-bottom:10px; transition:all .15s;
+  }
+  a.tool:hover { border-color:var(--pink); background:#fff5fa; transform:translateY(-1px); }
+  a.tool .t { font-weight:700; font-size:11pt; }
+  a.tool .d { font-size:9.5pt; color:var(--muted); margin-top:2px; }
+  a.tool .arrow { color:var(--pink); font-size:16pt; font-weight:700; }
+  footer { margin-top:22px; font-size:8.5pt; color:var(--muted); text-align:center; }
+  footer a { color:var(--pink); text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <img src="digiday_logo.svg" alt="DigiDay">
+    <h1>Rozcestník <span>nástrojů</span></h1>
+    <p class="sub">Interní nástroje DigiDay Czech s.r.o.</p>
+
+    <h2>Nástroje QARO</h2>
+
+    <a class="tool" href="https://qaro-importer.vercel.app" target="_blank" rel="noopener">
+      <span>
+        <span class="t">QARO importer</span>
+        <div class="d">Import obsahu ze starých CMS do systému QARO</div>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="tool" href="https://dominikdigiday.github.io/qaro-widget/" target="_blank" rel="noopener">
+      <span>
+        <span class="t">Generátor widgetů</span>
+        <div class="d">Odkazové dlaždice a widgety pro weby QARO</div>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+
+    <h2>Generátory PDF</h2>
+
+    <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol.html" target="_blank" rel="noopener">
+      <span>
+        <span class="t">Předávací protokol QARO</span>
+        <div class="d">Předání webového systému samosprávám a obcím</div>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol-b2b.html" target="_blank" rel="noopener">
+      <span>
+        <span class="t">Předávací protokol B2B</span>
+        <div class="d">Předání projektu firemnímu zákazníkovi (IČO, DIČ, smlouva o dílo)</div>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="tool" href="https://digidayczech.github.io/digiday-pdf/generator.html" target="_blank" rel="noopener">
+      <span>
+        <span class="t">Protokol o profylaxi webu</span>
+        <div class="d">Pravidelná údržba a kontrola webu</div>
+      </span>
+      <span class="arrow">→</span>
+    </a>
+
+    <footer>DigiDay Czech s.r.o. &nbsp;·&nbsp; IČO 06078362 &nbsp;·&nbsp; <a href="https://digiday.cz">digiday.cz</a></footer>
+  </div>
+</body>
+</html>
