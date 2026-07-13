@@ -42,6 +42,19 @@
   a.back:hover { color:var(--pink); }
   h2 { margin:0 0 14px; font-size:13pt; }
   h2 span { color:var(--pink); }
+  #login label { display:block; font-size:9.5pt; font-weight:700; margin:0 0 4px; }
+  #login input {
+    width:100%; padding:11px 12px; margin-bottom:14px; font-size:10.5pt;
+    border:1px solid var(--border); border-radius:8px; outline:none;
+  }
+  #login input:focus { border-color:var(--pink); }
+  #login button {
+    width:100%; padding:12px; font-size:10.5pt; font-weight:700; cursor:pointer;
+    color:#fff; background:var(--pink); border:none; border-radius:8px;
+  }
+  #login button:disabled { opacity:.6; cursor:wait; }
+  #login .err { color:#c0392b; font-size:9.5pt; margin:0 0 12px; display:none; }
+  footer .logout { cursor:pointer; }
   footer { margin-top:22px; font-size:8.5pt; color:var(--muted); text-align:center; }
   footer a { color:var(--pink); text-decoration:none; }
 </style>
@@ -51,6 +64,17 @@
     <img src="digiday_logo.svg" alt="DigiDay">
     <h1>Rozcestník <span>nástrojů</span></h1>
     <p class="sub">Interní nástroje DigiDay Czech s.r.o.</p>
+
+    <section id="login">
+      <form id="loginForm" autocomplete="on">
+        <label for="username">Uživatel (NEX)</label>
+        <input type="text" id="username" name="username" autocomplete="username" required>
+        <label for="password">Heslo</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+        <p class="err" id="loginErr">Nesprávné jméno nebo heslo.</p>
+        <button type="submit" id="loginBtn">Přihlásit se přes NEX</button>
+      </form>
+    </section>
 
     <section id="home">
       <a class="tool branch" href="#qaro">
@@ -69,10 +93,31 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="tool branch" href="https://digiday.cz/tools/saastool/" target="_blank" rel="noopener">
+      <a class="tool branch" href="#saas">
         <span>
           <span class="t">SAAS</span>
-          <div class="d">Výpis všech SaaS nástrojů, které využíváme</div>
+          <div class="d">SaaS nástroje, které využíváme</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </section>
+
+    <section id="saas">
+      <a class="back" href="#">← Zpět na rozcestník</a>
+      <h2>SaaS <span>nástroje</span></h2>
+
+      <a class="tool" href="https://digiscraper-27cy.vercel.app/" target="_blank" rel="noopener">
+        <span>
+          <span class="t">DigiScraper</span>
+          <div class="d">Monitoring úředních desek českých samospráv</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="tool" href="https://digiday.cz/tools/saastool/" target="_blank" rel="noopener">
+        <span>
+          <span class="t">Výpis všech SaaS nástrojů</span>
+          <div class="d">Přehled SaaS služeb, které využíváme</div>
         </span>
         <span class="arrow">→</span>
       </a>
@@ -136,17 +181,78 @@
       </a>
     </section>
 
-    <footer>DigiDay Czech s.r.o. &nbsp;·&nbsp; IČO 06078362 &nbsp;·&nbsp; <a href="https://digiday.cz">digiday.cz</a></footer>
+    <footer>
+      DigiDay Czech s.r.o. &nbsp;·&nbsp; IČO 06078362 &nbsp;·&nbsp; <a href="https://digiday.cz">digiday.cz</a>
+      <span id="userBar" style="display:none">&nbsp;·&nbsp; <span id="userName"></span> &nbsp;·&nbsp; <a class="logout" id="logoutBtn">Odhlásit</a></span>
+    </footer>
   </div>
 
 <script>
+  var AUTH_API = 'https://digiday-tools-auth.vercel.app/api/login';
+  var AUTH_KEY = 'nexAuth';
+
+  function getAuth() {
+    try {
+      var a = JSON.parse(localStorage.getItem(AUTH_KEY));
+      if (a && a.user && a.exp > Date.now()) return a;
+    } catch (e) {}
+    return null;
+  }
+
   function route() {
-    var id = location.hash.replace('#', '');
-    if (id !== 'qaro' && id !== 'generatory') id = 'home';
+    var auth = getAuth();
+    var id;
+    if (!auth) {
+      id = 'login';
+    } else {
+      id = location.hash.replace('#', '');
+      if (['qaro', 'generatory', 'saas'].indexOf(id) === -1) id = 'home';
+    }
     document.querySelectorAll('section').forEach(function (s) {
       s.classList.toggle('active', s.id === id);
     });
+    document.getElementById('userBar').style.display = auth ? '' : 'none';
+    if (auth) document.getElementById('userName').textContent = auth.user;
   }
+
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = document.getElementById('loginBtn');
+    var err = document.getElementById('loginErr');
+    btn.disabled = true;
+    err.style.display = 'none';
+    fetch(AUTH_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value
+      })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (data.ok) {
+        localStorage.setItem(AUTH_KEY, JSON.stringify({ user: data.user, exp: data.exp }));
+        document.getElementById('password').value = '';
+        route();
+      } else {
+        err.textContent = 'Nesprávné jméno nebo heslo.';
+        err.style.display = 'block';
+      }
+    })
+    .catch(function () {
+      err.textContent = 'Přihlášení se nepodařilo, zkuste to prosím znovu.';
+      err.style.display = 'block';
+    })
+    .finally(function () { btn.disabled = false; });
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    localStorage.removeItem(AUTH_KEY);
+    location.hash = '';
+    route();
+  });
+
   window.addEventListener('hashchange', route);
   route();
 </script>
