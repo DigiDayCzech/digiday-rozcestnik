@@ -135,7 +135,7 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="tool" href="https://digidayczech.github.io/qaro-widget/" target="_blank" rel="noopener">
+      <a class="tool" href="https://digidayczech.github.io/qaro-widget/" data-nex target="_blank" rel="noopener">
         <span>
           <span class="t">Generátor widgetů</span>
           <div class="d">Odkazové dlaždice a widgety pro weby QARO</div>
@@ -148,7 +148,7 @@
       <a class="back" href="#">← Zpět na rozcestník</a>
       <h2>Generátory <span>PDF</span></h2>
 
-      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol.html" target="_blank" rel="noopener">
+      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol.html" data-nex target="_blank" rel="noopener">
         <span>
           <span class="t">Předávací protokol QARO</span>
           <div class="d">Předání webového systému samosprávám a obcím</div>
@@ -156,7 +156,7 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol-b2b.html" target="_blank" rel="noopener">
+      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/predavaci-protokol-b2b.html" data-nex target="_blank" rel="noopener">
         <span>
           <span class="t">Předávací protokol B2B</span>
           <div class="d">Předání projektu firemnímu zákazníkovi (IČO, DIČ, smlouva o dílo)</div>
@@ -164,7 +164,7 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/generator.html" target="_blank" rel="noopener">
+      <a class="tool" href="https://digidayczech.github.io/digiday-pdf/generator.html" data-nex target="_blank" rel="noopener">
         <span>
           <span class="t">Protokol o profylaxi webu</span>
           <div class="d">Pravidelná údržba a kontrola webu</div>
@@ -172,7 +172,7 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="tool" href="https://digidayczech.github.io/harmonogram-generator/" target="_blank" rel="noopener">
+      <a class="tool" href="https://digidayczech.github.io/harmonogram-generator/" data-nex target="_blank" rel="noopener">
         <span>
           <span class="t">Harmonogram projektu</span>
           <div class="d">Harmonogram prací k projektům pro klienty</div>
@@ -194,9 +194,19 @@
   function getAuth() {
     try {
       var a = JSON.parse(localStorage.getItem(AUTH_KEY));
-      if (a && a.user && a.exp > Date.now()) return a;
+      // token je nutný pro SSO do nástrojů — starší session bez tokenu vyžádá nové přihlášení
+      if (a && a.user && a.token && a.exp > Date.now()) return a;
     } catch (e) {}
     return null;
+  }
+
+  // Chráněné nástroje (odkazy s data-nex) dostanou SSO token v URL fragmentu,
+  // jejich nex-guard.js ho ověří a uloží si vlastní session.
+  function decorateLinks(auth) {
+    document.querySelectorAll('a[data-nex]').forEach(function (a) {
+      var base = a.href.split('#')[0];
+      a.href = auth ? base + '#nex=' + encodeURIComponent(auth.token) : base;
+    });
   }
 
   function route() {
@@ -213,6 +223,7 @@
     });
     document.getElementById('userBar').style.display = auth ? '' : 'none';
     if (auth) document.getElementById('userName').textContent = auth.user;
+    decorateLinks(auth);
   }
 
   document.getElementById('loginForm').addEventListener('submit', function (e) {
@@ -232,7 +243,7 @@
     .then(function (r) { return r.json(); })
     .then(function (data) {
       if (data.ok) {
-        localStorage.setItem(AUTH_KEY, JSON.stringify({ user: data.user, exp: data.exp }));
+        localStorage.setItem(AUTH_KEY, JSON.stringify({ user: data.user, exp: data.exp, token: data.token }));
         document.getElementById('password').value = '';
         route();
       } else {
