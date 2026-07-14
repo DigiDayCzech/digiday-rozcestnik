@@ -54,6 +54,17 @@
   }
   #login button:disabled { opacity:.6; cursor:wait; }
   #login .err { color:#c0392b; font-size:9.5pt; margin:0 0 12px; display:none; }
+  #login .divider {
+    display:flex; align-items:center; gap:10px; margin:16px 0;
+    color:var(--muted); font-size:8.5pt; text-transform:uppercase; letter-spacing:.06em;
+  }
+  #login .divider::before, #login .divider::after { content:""; flex:1; height:1px; background:var(--border); }
+  #login .btn-nex {
+    display:block; text-align:center; text-decoration:none; padding:12px;
+    font-size:10.5pt; font-weight:700; color:var(--pink);
+    border:1px solid var(--pink); border-radius:8px; transition:all .15s;
+  }
+  #login .btn-nex:hover { background:#fff5fa; }
   footer .logout { cursor:pointer; }
   footer { margin-top:22px; font-size:8.5pt; color:var(--muted); text-align:center; }
   footer a { color:var(--pink); text-decoration:none; }
@@ -72,8 +83,10 @@
         <label for="password">Heslo</label>
         <input type="password" id="password" name="password" autocomplete="current-password" required>
         <p class="err" id="loginErr">Nesprávné jméno nebo heslo.</p>
-        <button type="submit" id="loginBtn">Přihlásit se přes NEX</button>
+        <button type="submit" id="loginBtn">Přihlásit se</button>
       </form>
+      <div class="divider"><span>nebo</span></div>
+      <a class="btn-nex" id="nexSsoBtn" href="https://digiday-tools-auth.vercel.app/api/nex-start">Přihlásit se přes NEX</a>
     </section>
 
     <section id="home">
@@ -264,8 +277,40 @@
     route();
   });
 
+  // Návrat z přihlášení přes NEX: callback proxy vrací #nex=<token> nebo #nexerr=<kód>
+  function handleNexReturn() {
+    var err = (location.hash || '').match(/[#&]nexerr=([^&]+)/);
+    if (err) {
+      history.replaceState(null, '', location.pathname);
+      var msgs = {
+        not_configured: 'Přihlášení přes NEX ještě není nakonfigurované.',
+        nex_unreachable: 'NEX je nedostupný, zkuste to prosím později.'
+      };
+      var el = document.getElementById('loginErr');
+      el.textContent = msgs[err[1]] || 'Přihlášení přes NEX se nezdařilo, zkuste to znovu.';
+      el.style.display = 'block';
+      return false;
+    }
+    var m = (location.hash || '').match(/[#&]nex=([^&]+)/);
+    if (!m) return false;
+    var token = decodeURIComponent(m[1]);
+    history.replaceState(null, '', location.pathname);
+    fetch('https://digiday-tools-auth.vercel.app/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: token })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (d.ok) localStorage.setItem(AUTH_KEY, JSON.stringify({ user: d.user, exp: d.exp, token: token }));
+      route();
+    })
+    .catch(function () { route(); });
+    return true;
+  }
+
   window.addEventListener('hashchange', route);
-  route();
+  if (!handleNexReturn()) route();
 </script>
 </body>
 </html>
