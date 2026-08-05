@@ -115,15 +115,19 @@
   });
 </script>
 
-<!-- QARO AI widget -->
+<!-- QARO AI widget — vlevo, aby se nekryl s tlačítkem DigiDay asistenta -->
 <script>
   window.QARO_AI_CONFIG = {
     cityId: "01936780-43ad-7c1a-bc70-20b889e3bfe9",
     cityName: "Libochovany",
     apiUrl: "https://qaro-ai-prod.dev2.mountainlift.cz",
+    position: "bottom-left",
     theme: { primaryColor: "#e0007a" }
   };
 </script>
 <script src="qaro-ai-embed.js" defer></script>
+
+<!-- AI asistent nad interními nástroji (zobrazí se jen přihlášeným) -->
+<script src="digiday-asistent.js" defer></script>
 </body>
 </html>
