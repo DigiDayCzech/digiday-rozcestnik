@@ -328,5 +328,16 @@
   window.addEventListener('hashchange', route);
   if (!handleNexReturn()) route();
 </script>
+
+<!-- QARO AI widget (Mountainlift) — interaktivní chat vpravo dole -->
+<script>
+  window.QARO_AI_CONFIG = {
+    cityId: "01936780-43ad-7c1a-bc70-20b889e3bfe9",
+    cityName: "Libochovany",
+    apiUrl: "https://qaro-ai-prod.dev2.mountainlift.cz",
+    theme: { primaryColor: "#e0007a" }
+  };
+</script>
+<script src="qaro-ai-embed.js" defer></script>
 </body>
 </html>
