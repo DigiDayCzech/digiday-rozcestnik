@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<script src="nex-guard.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DigiDay – QARO AI chatbot</title>
+<style>
+  :root { --pink:#e0007a; --dark:#313746; --bg:#f4f4f7; --border:#e5e7eb; --muted:#6b7280; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    color:var(--dark); background:var(--bg); padding:24px;
+  }
+  .card {
+    background:#fff; border:1px solid var(--border); border-top:4px solid var(--pink);
+    border-radius:10px; padding:32px; max-width:680px; width:100%;
+    box-shadow:0 8px 30px rgba(0,0,0,.06);
+  }
+  .card img { height:38px; margin-bottom:18px; }
+  a.back { display:inline-block; text-decoration:none; color:var(--muted); font-size:9.5pt; font-weight:700; margin-bottom:14px; }
+  a.back:hover { color:var(--pink); }
+  h1 { margin:0 0 4px; font-size:18pt; }
+  h1 span { color:var(--pink); }
+  p.sub { margin:0 0 24px; color:var(--muted); font-size:10.5pt; }
+  h2 { margin:26px 0 10px; font-size:12pt; }
+  h2 span { color:var(--pink); }
+  p { font-size:10.5pt; line-height:1.55; margin:0 0 12px; }
+  .note {
+    border:1px solid var(--border); border-left:3px solid var(--pink); border-radius:6px;
+    padding:12px 14px; background:#fff5fa; font-size:9.5pt; line-height:1.5; margin-bottom:8px;
+  }
+  .note b { color:var(--pink); }
+  dl { margin:0; font-size:9.5pt; }
+  dt { font-weight:700; margin-top:10px; }
+  dd { margin:2px 0 0; color:var(--muted); }
+  pre {
+    background:var(--dark); color:#f4f4f7; border-radius:8px; padding:14px 16px;
+    font-size:9pt; line-height:1.5; overflow-x:auto; margin:0 0 10px;
+  }
+  code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  .copy {
+    padding:9px 14px; font-size:9.5pt; font-weight:700; cursor:pointer;
+    color:#fff; background:var(--pink); border:none; border-radius:8px;
+  }
+  .copy:disabled { opacity:.6; }
+  footer { margin-top:26px; font-size:8.5pt; color:var(--muted); text-align:center; }
+  footer a { color:var(--pink); text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <a class="back" href="https://tools.digiday.cz/#qaro">← Zpět na rozcestník</a>
+    <img src="digiday_logo.svg" alt="DigiDay">
+    <h1>QARO <span>AI chatbot</span></h1>
+    <p class="sub">Ukázka widgetu AI asistenta pro weby samospráv</p>
+
+    <div class="note">
+      <b>Ostrá instance.</b> Widget je napojený na produkční server
+      <code>qaro-ai-prod.dev2.mountainlift.cz</code> — ten samý, ze kterého běží
+      chatbot na webech klientů (např. <a href="https://libochovany.cz/" target="_blank" rel="noopener">libochovany.cz</a>).
+      Dotazy jdou do reálného provozu.
+    </div>
+
+    <h2>Jak to <span>vyzkoušet</span></h2>
+    <p>
+      Vpravo dole je růžové tlačítko. Otevře chat naplněný daty obce
+      <b>Libochovany</b> — zkuste třeba „Kdo je starosta?“ nebo „Jaké jsou úřední hodiny?“.
+      Odpovědi se skládají z naindexovaného obsahu webu (stránky, FAQ, aktuality)
+      a chatbot k nim uvádí zdroje. Historie konverzace se ukládá do prohlížeče
+      zvlášť pro každou obec.
+    </p>
+
+    <h2>Nasazení na <span>web klienta</span></h2>
+    <p>Do stránky stačí vložit dva skripty. Žádný build, žádné závislosti:</p>
+<pre id="snippet"><code>&lt;script&gt;
+  window.QARO_AI_CONFIG = {
+    cityId: "01936780-43ad-7c1a-bc70-20b889e3bfe9",
+    cityName: "Libochovany",
+    apiUrl: "https://qaro-ai-prod.dev2.mountainlift.cz"
+  };
+&lt;/script&gt;
+&lt;script src="https://tools.digiday.cz/qaro-ai-embed.js" defer&gt;&lt;/script&gt;</code></pre>
+    <button class="copy" id="copyBtn">Zkopírovat kód</button>
+
+    <h2>Parametry <span>konfigurace</span></h2>
+    <dl>
+      <dt>cityId</dt>
+      <dd>UUID webu v systému QARO. Určuje, z jakých dat chatbot odpovídá — povinné.</dd>
+      <dt>cityName</dt>
+      <dd>Název obce zobrazený v hlavičce chatu.</dd>
+      <dt>apiUrl</dt>
+      <dd>Adresa serveru QARO AI. Sem míří iframe i všechna volání API.</dd>
+      <dt>theme.primaryColor</dt>
+      <dd>Barva tlačítka a akcentů. Nevyplněná se převezme z CSS proměnné <code>--color-main</code> webu.</dd>
+      <dt>position</dt>
+      <dd><code>bottom-right</code> (výchozí) nebo <code>bottom-left</code>.</dd>
+    </dl>
+
+    <footer>
+      DigiDay Czech s.r.o. &nbsp;·&nbsp; IČO 06078362 &nbsp;·&nbsp; <a href="https://digiday.cz">digiday.cz</a>
+    </footer>
+  </div>
+
+<script>
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    var btn = this;
+    var text = document.getElementById('snippet').innerText;
+    navigator.clipboard.writeText(text).then(function () {
+      btn.textContent = 'Zkopírováno ✓';
+      btn.disabled = true;
+      setTimeout(function () { btn.textContent = 'Zkopírovat kód'; btn.disabled = false; }, 2000);
+    });
+  });
+</script>
+
+<!-- QARO AI widget -->
+<script>
+  window.QARO_AI_CONFIG = {
+    cityId: "01936780-43ad-7c1a-bc70-20b889e3bfe9",
+    cityName: "Libochovany",
+    apiUrl: "https://qaro-ai-prod.dev2.mountainlift.cz",
+    theme: { primaryColor: "#e0007a" }
+  };
+</script>
+<script src="qaro-ai-embed.js" defer></script>
+</body>
+</html>
