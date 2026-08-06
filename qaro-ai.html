@@ -115,11 +115,14 @@
   });
 </script>
 
-<!-- QARO AI widget -->
+<!-- QARO AI widget - pilotní nasazení pro tools.digiday.cz -->
 <script>
+  // Vlastní cityId, aby chatbot nesahal na data Libochovan.
+  // Ukázkový snippet výše záměrně zůstává s Libochovany - slouží jako
+  // vzor nasazení pro weby samospráv.
   window.QARO_AI_CONFIG = {
-    cityId: "01936780-43ad-7c1a-bc70-20b889e3bfe9",
-    cityName: "Libochovany",
+    cityId: "tools.digiday.cz",
+    cityName: "DigiDay",
     apiUrl: "https://qaro-ai-prod.dev2.mountainlift.cz",
     theme: { primaryColor: "#e0007a" }
   };

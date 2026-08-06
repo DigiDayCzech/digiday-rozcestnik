@@ -331,9 +331,12 @@
 
 <!-- QARO AI widget (Mountainlift) — interaktivní chat vpravo dole -->
 <script>
+  // Pilot: vlastní cityId, aby chatbot nesahal na data Libochovan.
+  // Pro tools.digiday.cz zatím není indexovaný obsah, takže odpovídá
+  // přes web search a obecné znalosti, ne z FAQ.
   window.QARO_AI_CONFIG = {
-    cityId: "01936780-43ad-7c1a-bc70-20b889e3bfe9",
-    cityName: "Libochovany",
+    cityId: "tools.digiday.cz",
+    cityName: "DigiDay",
     apiUrl: "https://qaro-ai-prod.dev2.mountainlift.cz",
     theme: { primaryColor: "#e0007a" }
   };
