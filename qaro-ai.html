@@ -117,13 +117,13 @@
 
 <!-- QARO AI widget - pilotní nasazení pro tools.digiday.cz -->
 <script>
-  // Vlastní cityId, aby chatbot nesahal na data Libochovan.
-  // Ukázkový snippet výše záměrně zůstává s Libochovany - slouží jako
-  // vzor nasazení pro weby samospráv.
+  // Vlastní instance DigiDay (firemní režim + FAQ ze Supabase).
+  // Ukázkový snippet výše záměrně zůstává s Libochovany a instancí
+  // Mountainliftu - slouží jako vzor nasazení pro weby samospráv.
   window.QARO_AI_CONFIG = {
     cityId: "tools.digiday.cz",
     cityName: "DigiDay",
-    apiUrl: "https://qaro-ai-prod.dev2.mountainlift.cz",
+    apiUrl: "https://qaro-ai-digiday.vercel.app",
     theme: { primaryColor: "#e0007a" }
   };
 </script>

@@ -331,13 +331,13 @@
 
 <!-- QARO AI widget (Mountainlift) — interaktivní chat vpravo dole -->
 <script>
-  // Pilot: vlastní cityId, aby chatbot nesahal na data Libochovan.
-  // Pro tools.digiday.cz zatím není indexovaný obsah, takže odpovídá
-  // přes web search a obecné znalosti, ne z FAQ.
+  // Vlastní instance DigiDay, ne Mountainlift. Jen ta umí firemní režim
+  // a čte FAQ ze Supabase - na qaro-ai-prod se chatbot představoval jako
+  // "virtuální místostarosta města DigiDay".
   window.QARO_AI_CONFIG = {
     cityId: "tools.digiday.cz",
     cityName: "DigiDay",
-    apiUrl: "https://qaro-ai-prod.dev2.mountainlift.cz",
+    apiUrl: "https://qaro-ai-digiday.vercel.app",
     theme: { primaryColor: "#e0007a" }
   };
 </script>
