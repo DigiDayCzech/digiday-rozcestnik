@@ -7,6 +7,10 @@
  * guard ho ověří přes digiday-tools-auth a uloží do localStorage,
  * takže další návštěvy stejného originu už token v URL nepotřebují.
  * Bez platného tokenu přesměruje na přihlášení na rozcestníku.
+ *
+ * Předvyplnění z NEXu: ostatní parametry ve fragmentu (#nex=…&subjekt=…)
+ * se po načtení stránky zapíšou do polí s atributem data-prefill="subjekt"
+ * a vyvolá se na nich událost input, aby se překreslil náhled.
  */
 (function () {
   var KEY = 'nexAuth';
@@ -28,6 +32,31 @@
 
   var m = (location.hash || '').match(/[#&]nex=([^&]+)/);
   var token = m ? decodeURIComponent(m[1]) : null;
+
+  var prefill = {};
+  (location.hash || '').replace(/^#/, '').split('&').forEach(function (kv) {
+    var i = kv.indexOf('=');
+    if (i < 1) return;
+    var k = decodeURIComponent(kv.slice(0, i));
+    if (k === 'nex') return;
+    try { prefill[k] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, ' ')); } catch (e) {}
+  });
+
+  function applyPrefill() {
+    if (!Object.keys(prefill).length) return;
+    history.replaceState(null, '', location.pathname + location.search);
+    // pole, která NEX neposlal, vyprázdnit (ať nezůstanou data jiného zákazníka z localStorage); datum nechat
+    Array.prototype.forEach.call(document.querySelectorAll('[data-prefill]'), function (el) {
+      var k = el.getAttribute('data-prefill');
+      if (k in prefill) el.value = prefill[k];
+      else if (el.type !== 'date') el.value = '';
+      else return;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
+  // 'load' až po inline skriptech stránky (ty můžou obnovit uložený stav z localStorage)
+  window.addEventListener('load', applyPrefill);
 
   if (token) {
     fetch(VERIFY, {
