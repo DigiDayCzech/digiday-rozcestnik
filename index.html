@@ -106,10 +106,31 @@
         <span class="arrow">→</span>
       </a>
 
+      <a class="tool branch" href="#sales" id="salesTile" style="display:none">
+        <span>
+          <span class="t">SALES</span>
+          <div class="d">Nástroje pro obchod a asistentky (jen pro vybrané uživatele)</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
       <a class="tool branch" href="#saas">
         <span>
           <span class="t">SAAS</span>
           <div class="d">SaaS nástroje, které využíváme</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </section>
+
+    <section id="sales">
+      <a class="back" href="#">← Zpět na rozcestník</a>
+      <h2>SALES <span>nástroje</span></h2>
+
+      <a class="tool" href="https://digiday-generator-nabidek.vercel.app/" data-nex target="_blank" rel="noopener">
+        <span>
+          <span class="t">Generátor nabídek</span>
+          <div class="d">Z poptávky zákazníka AI sestaví cenovou nabídku z katalogu DigiDay</div>
         </span>
         <span class="arrow">→</span>
       </a>
@@ -253,7 +274,8 @@
       id = 'login';
     } else {
       id = location.hash.replace('#', '');
-      if (['qaro', 'generatory', 'saas'].indexOf(id) === -1) id = 'home';
+      if (['qaro', 'generatory', 'saas', 'sales'].indexOf(id) === -1) id = 'home';
+      if (id === 'sales' && !salesOk) id = 'home';
     }
     document.querySelectorAll('section').forEach(function (s) {
       s.classList.toggle('active', s.id === id);
@@ -261,6 +283,25 @@
     document.getElementById('userBar').style.display = auth ? '' : 'none';
     if (auth) document.getElementById('userName').textContent = auth.user;
     decorateLinks(auth);
+    checkSales(auth);
+  }
+
+  // Vetva SALES: seznam povolených uživatelů drží server generátoru (SALES_USERS),
+  // rozcestník se jen zeptá, zda ji tomuto uživateli zobrazit.
+  var salesOk = false, salesFor = null;
+  function checkSales(auth) {
+    var tile = document.getElementById('salesTile');
+    if (!auth) { salesOk = false; salesFor = null; tile.style.display = 'none'; return; }
+    if (salesFor === auth.token) { tile.style.display = salesOk ? '' : 'none'; return; }
+    salesFor = auth.token;
+    fetch('https://digiday-generator-nabidek.vercel.app/api/pristup', { headers: { 'X-Nex-Token': auth.token } })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        salesOk = !!d.pristup;
+        tile.style.display = salesOk ? '' : 'none';
+        if (salesOk && location.hash === '#sales') route();
+      })
+      .catch(function () {});
   }
 
   document.getElementById('loginForm').addEventListener('submit', function (e) {
