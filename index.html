@@ -98,6 +98,14 @@
         <span class="arrow">→</span>
       </a>
 
+      <a class="tool branch" href="#formulare">
+        <span>
+          <span class="t">Formuláře</span>
+          <div class="d">Webové formuláře obcí: e-mail, logo a barva pro každou obec</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+
       <a class="tool branch" href="#generatory">
         <span>
           <span class="t">Generátory PDF</span>
@@ -202,6 +210,19 @@
       </a>
     </section>
 
+    <section id="formulare">
+      <a class="back" href="#">← Zpět na rozcestník</a>
+      <h2>Webové <span>formuláře</span></h2>
+
+      <a class="tool" href="https://qaro-formulare.vercel.app/admin/" data-nex target="_blank" rel="noopener">
+        <span>
+          <span class="t">Správa formulářů obcí</span>
+          <div class="d">Založení obce, kontaktní e-mail, logo, barva a výběr formulářů pro iframe</div>
+        </span>
+        <span class="arrow">→</span>
+      </a>
+    </section>
+
     <section id="generatory">
       <a class="back" href="#">← Zpět na rozcestník</a>
       <h2>Generátory <span>PDF</span></h2>
@@ -274,7 +295,7 @@
       id = 'login';
     } else {
       id = location.hash.replace('#', '');
-      if (['qaro', 'generatory', 'saas', 'sales'].indexOf(id) === -1) id = 'home';
+      if (['qaro', 'formulare', 'generatory', 'saas', 'sales'].indexOf(id) === -1) id = 'home';
       if (id === 'sales' && !salesOk) id = 'home';
     }
     document.querySelectorAll('section').forEach(function (s) {
